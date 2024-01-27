@@ -3,35 +3,26 @@ import Phonebook from './Phonebook/Phonebook';
 import Contacts from './Contacts/Contacts';
 import Filter from './Filter/Filter';
 import { nanoid } from 'nanoid';
-import { saveTolS, getFromLS } from './helpers/localeStorage';
-import { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact, deleteContact } from 'store/contacts/contactSlice';
+import { filterValue } from 'store/filter/filterSlice';
 
 export const App = () => {
-  const [contacts, setContacts] = useState(getFromLS('contacts') || []);
-  const [filter, setfilter] = useState('');
+  const { contacts } = useSelector(state => state.contacts);
+  const { filter } = useSelector(state => state.filter);
 
-  useEffect(() => {
-    if (getFromLS('contacts')) setContacts(getFromLS('contacts'));
-  }, []);
-
-  useEffect(() => {
-    saveTolS('contacts', contacts);
-  }, [contacts]);
+  const dispatch = useDispatch();
 
   const createContact = data => {
-    const user = {
-      ...data,
-      id: nanoid(),
-    };
-    setContacts(prevState => [...prevState, user]);
+    dispatch(addContact({ ...data, id: nanoid() }));
   };
 
   const handleFilter = ({ target }) => {
-    setfilter(target.value);
+    dispatch(filterValue(target.value));
   };
 
   const handleDelete = id => {
-    setContacts(prev => prev.filter(contact => contact.id !== id));
+    dispatch(deleteContact(id));
   };
 
   const filtered = contacts.filter(contact =>

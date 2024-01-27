@@ -5,7 +5,8 @@
 
 .item {
   border: 1px solid #ddd;
-  margin: 8px 0;
+  max-width: 500px;
+  margin: 8px auto;
   padding: 12px;
   display: flex;
   justify-content: space-between;
