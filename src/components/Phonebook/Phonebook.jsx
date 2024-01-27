@@ -1,10 +1,21 @@
 import { useState } from 'react';
 import css from './phonebook.module.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { addContact } from 'store/contacts/contactSlice';
+import { nanoid } from 'nanoid';
 
-const Phonebook = ({ createContact, data }) => {
+const Phonebook = () => {
+  const dispatch = useDispatch();
+
+const { contacts } = useSelector(state => state.contacts);
 
   const [info, setInfo] = useState({ name: '', number: '' });
   const { name, number } = info;
+
+  
+   const createContact = data => {
+     dispatch(addContact({ ...data, id: nanoid() }));
+   };
 
   const handleChange = ({ target }) => {
     setInfo({
@@ -15,9 +26,8 @@ const Phonebook = ({ createContact, data }) => {
 
   const getInfo = e => {
     e.preventDefault();
-    const includeName = data.some(
-      contact =>
-        contact.name.toLowerCase() === name.toLowerCase().trim()
+    const includeName = contacts.some(
+      contact => contact.name.toLowerCase() === name.toLowerCase().trim()
     );
     if (includeName) {
       alert(`${name} is already in contacts`);
